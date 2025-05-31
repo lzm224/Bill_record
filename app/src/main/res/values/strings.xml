@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Bill_record</string>
+    <string name="title_activity_bill_pager">BillPagerActivity</string>
+</resources>
