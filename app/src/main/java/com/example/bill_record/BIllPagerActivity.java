@@ -17,9 +17,11 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.PagerTabStrip;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.utils.BillPagerAdapter;
+
 import java.util.Calendar;
 
-public class BIllPagerActivity extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
+public class BIllPagerActivity extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener,DatePickerDialog.OnDateSetListener{
 
     private TextView tv_month = findViewById(R.id.tv_month);
     private ViewPager vp_bill = findViewById(R.id.vp_bill);
@@ -73,12 +75,12 @@ public class BIllPagerActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    public void onDateSet(DatePicker View, int year, int mont, int date) {
+    public void onDateSet(DatePicker View, int year, int month, int date) {
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, date);
         tv_month.setText(DateUtil.getMonth(calendar));
-        vp_bill.setCurrentitem(month);
+        vp_bill.setCurrentItem(month);
     }
 
     @Override
@@ -90,6 +92,7 @@ public class BIllPagerActivity extends AppCompatActivity implements View.OnClick
     public void onPageSelected(int position) {
         calendar.set(Calendar.MONTH, position);
         tv_month.setText(DateUtil.getMonth(calendar));
+
     }
 
     @Override
