@@ -40,7 +40,7 @@ public class BillFragment extends Fragment{
         mContext = getActivity();//获取活动页面上下文
         if (getArguments() != null)
             mMonth =getArguments().getInt("month");
-        mView = inflater.inflate(R.layout.fragment_bill,container,false);
+        mView = inflater.inflate(R.layout.bill_fragment,container,false);
         return mView;
     }
     public void onStart(){
@@ -55,13 +55,15 @@ public class BillFragment extends Fragment{
             }
 
             BillInfo sum = new BillInfo();
-            sum.date = "合计",sum.desc =String.format("收入%f\n指出%f元",income,expend);
+            sum.date = "合计";
+            sum.desc =String.format("收入%f\n指出%f元",income,expend);
             sum.remark = String.format("净支出%f",income-expend);
             mBillList.add(sum);
         }
+
         BillListAdapter listAdapter = new BillListAdapter(mContext, mBillList);
-        lv_bill.setAdapter((listAdapter);
-        lv_bill.setOnItemClickListener(listAdapter);
+        lv_bill.setAdapter(listAdapter);//fragment中的列表视图设置一个装填器
+        lv_bill.setOnItemClickListener(listAdapter);//列表视图设置事件
         lv_bill.setOnItemLongClickListener(listAdapter);
 
     }

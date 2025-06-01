@@ -18,11 +18,15 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.utils.BillDBHelper;
 import com.example.utils.BillInfo;
+import com.example.utils.DateUtil;
+import com.example.utils.ViewUtil;
 
 import java.util.Calendar;
 
-public class BillAddActivity extends AppCompatActivity implements View.OnClickListener {
+public class BillAddActivity extends AppCompatActivity implements View.OnClickListener,
+        RadioGroup.OnCheckedChangeListener, DatePickerDialog.OnDateSetListener {
     //params
     private final static String TAG = "BillAddActivity";
     private TextView tv_date;
@@ -86,10 +90,6 @@ public class BillAddActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    public void setOnCheckedChangeListener(RadioGroup group, int id){
-        mBillType = (id == R.id.rb_expand) ? 1:0;
-    }
-
     public void onDateSet(DatePicker d,
                           int year, int month, int date) {
         calendar.set(Calendar.YEAR, year);
@@ -107,12 +107,8 @@ public class BillAddActivity extends AppCompatActivity implements View.OnClickLi
         bill.type = mBillType;
         bill.desc = et_desc.getText().toString();
         bill.amount = Double.parseDouble(et_amount.getText().toString());
-        boolean success = mBillHelper.save(bill);
-        if(success){
-            Toast.makeText(this,"账单添加成功",Toast.LENGTH_LONG);
-
-        }
-        else Toast.makeText(this,"账单条目已经存在，需要修改请进入账单列表中",Toast.LENGTH_LONG);
+        mBillHelper.save(bill);
+            Toast.makeText(this, "账单添加成功", Toast.LENGTH_LONG);
         //页面重置
         calendar = Calendar.getInstance();
         et_amount.setText("");
@@ -120,4 +116,14 @@ public class BillAddActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        mBillType = (checkedId == R.id.rb_expand) ? 1 : 0;
+    }
+
+    protected void onResume() {
+        super.onResume();
+        xuhao = getIntent().getIntExtra("xuhao", -1);
+
+    }
 }

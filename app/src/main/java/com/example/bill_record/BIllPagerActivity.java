@@ -18,13 +18,16 @@ import androidx.viewpager.widget.PagerTabStrip;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.utils.BillPagerAdapter;
+import com.example.utils.DateUtil;
 
 import java.util.Calendar;
 
 public class BIllPagerActivity extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener,DatePickerDialog.OnDateSetListener{
 
     private TextView tv_month = findViewById(R.id.tv_month);
+    //日期选择
     private ViewPager vp_bill = findViewById(R.id.vp_bill);
+    //下面的翻页视图
     private Calendar calendar = Calendar.getInstance();
 
     @Override
@@ -49,7 +52,7 @@ public class BIllPagerActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void initViewPager() {
-        PagerAdapter adapter = new BillPagerAdapter(getSupportFragmentManager(),
+        BillPagerAdapter adapter = new BillPagerAdapter(getSupportFragmentManager(),
                 calendar.get(Calendar.YEAR));
         PagerTabStrip pts_bill = findViewById(R.id.pts_bill);
         pts_bill.setTextSize(TypedValue.COMPLEX_UNIT_SP,17);
