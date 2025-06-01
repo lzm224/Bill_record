@@ -28,7 +28,7 @@ public class BillFragment extends Fragment{
         BillFragment fragment = new BillFragment();
         Bundle bundle = new Bundle();
         //通过包裹塞给碎片让碎片适配器适用数据
-        bundle.putInt("momth",month);
+        bundle.putInt("month",month);
         fragment.setArguments(bundle);//碎片构造时候用
         return fragment;
     }
