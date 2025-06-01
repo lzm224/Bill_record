@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.speech.AlternativeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +11,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.AsyncDifferConfig;
-import androidx.recyclerview.widget.ListAdapter;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bill_record.BillAddActivity;
 import com.example.bill_record.R;
@@ -65,7 +59,7 @@ public class BillListAdapter extends BaseAdapter implements AdapterView.OnItemCl
 
         BillInfo bill = mBillList.get(position);
         holder.tv_date.setText(bill.date);
-        holder.tv_desc.setText((bill.desc));
+        holder.tv_desc.setText((bill.descb));
         if (bill.date.equals("合计"))
             holder.tv_amount.setText(bill.remark);
         else
@@ -77,6 +71,7 @@ public class BillListAdapter extends BaseAdapter implements AdapterView.OnItemCl
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if(position >= mBillList.size() - 1){
+            //小计行不响应点击事件
             return;
         }
         Log.d(TAG,"onItemCLick position = " +position);
@@ -94,7 +89,7 @@ public class BillListAdapter extends BaseAdapter implements AdapterView.OnItemCl
         BillInfo bill = mBillList.get(position);
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         String desc = String.format("删除账单？\n%s% s%d %s",bill.date,
-                bill.type==0?"收入":"支出",(int)bill.amount,bill.desc);
+                bill.type==0?"收入":"支出",(int)bill.amount,bill.descb);
         builder.setMessage(desc);
         builder.setPositiveButton("Yes", (DialogInterface dialog, int which)->{
             deleteBill(position);
@@ -108,10 +103,11 @@ public class BillListAdapter extends BaseAdapter implements AdapterView.OnItemCl
 
     private void deleteBill(int position){
         BillInfo bill = mBillList.get(position);
-        mBillList.remove((position));
+        mBillList.remove((position));//从数据序列移除指定位置的元素
         notifyDataSetChanged();//告诉适配器数据放生了变化
         BillDBHelper helper = BillDBHelper.getInstance(mContext);
         helper.delete(bill.xuhao);
+
     }
 
     public final class ViewHolder {

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
@@ -19,9 +18,9 @@ public class BillFragment extends Fragment{
     private static  final String TAG = "BillFragment";
     protected View mView;//一个视图对象
     protected Context mContext;//上下文对象
-    private int mMonth;//当前选择的月份用在数据库查询
+    private int mMonth;//当前选择的月份用在数据库查询，传入的实际是标题上面的月份，就是页面的position
     private ListView lv_bill;
-    private ArrayList<BillInfo> mBillList = new ArrayList<>();//泛型擦除
+    private List<BillInfo> mBillList = new ArrayList<BillInfo>();//泛型擦除
 
 
     public static Fragment newInstance(int month) {
@@ -30,7 +29,7 @@ public class BillFragment extends Fragment{
         Bundle bundle = new Bundle();
         //通过包裹塞给碎片让碎片适配器适用数据
         bundle.putInt("momth",month);
-        fragment.setArguments(bundle);
+        fragment.setArguments(bundle);//碎片构造时候用
         return fragment;
     }
 
@@ -41,12 +40,14 @@ public class BillFragment extends Fragment{
         if (getArguments() != null)
             mMonth =getArguments().getInt("month");
         mView = inflater.inflate(R.layout.bill_fragment,container,false);
+        //创建出碎片视图
         return mView;
     }
     public void onStart(){
         super.onStart();
         BillDBHelper helper = BillDBHelper.getInstance(mContext);
         mBillList = helper.queryByMonth(mMonth);
+        //得到传递给列表适配器的数据序列
         if(mBillList != null && mBillList.size() >0){
             double income = 0, expend = 0;
             for(BillInfo bill:mBillList){
@@ -56,7 +57,7 @@ public class BillFragment extends Fragment{
 
             BillInfo sum = new BillInfo();
             sum.date = "合计";
-            sum.desc =String.format("收入%f\n指出%f元",income,expend);
+            sum.descb =String.format("收入%f\n指出%f元",income,expend);
             sum.remark = String.format("净支出%f",income-expend);
             mBillList.add(sum);
         }

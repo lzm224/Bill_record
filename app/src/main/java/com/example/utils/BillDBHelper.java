@@ -11,8 +11,6 @@ import androidx.annotation.OptIn;
 import androidx.media3.common.util.Log;
 import androidx.media3.common.util.UnstableApi;
 
-import com.example.bill_record.R;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,13 +25,15 @@ public class BillDBHelper extends SQLiteOpenHelper {
     public String mTableName, mCreateSQL, mSelectSQL;
     public static String table_name = "bill_info";
 
-    public BillDBHelper(@Nullable Context context) {
+    public BillDBHelper(Context context) {
         super(context, db_name, null, 1);
         mContext = context;
         mVersion = 1;
         mWriteDB = this.getWritableDatabase();
         mReadDB = this.getReadableDatabase();
         mTableName = table_name;
+        mSelectSQL = String.format("select rowid,_id,date,month,type,amount,descb,create_time,update_time from %s where "
+                , mTableName);
     }
 
     //创建数据库
@@ -76,7 +76,7 @@ public class BillDBHelper extends SQLiteOpenHelper {
             cv.put("month", info.month);
             cv.put("type", info.type);
             cv.put("amount", info.amount);
-            cv.put("desc", info.desc);
+            cv.put("descb", info.descb);
             cv.put("create_time", info.create_time);
             cv.put("update_time", info.update_time);
             cv.put("month", info.month);
@@ -107,16 +107,25 @@ public class BillDBHelper extends SQLiteOpenHelper {
     }
 
     //数据库更新操作
-    private int update(BillInfo info) {
-        return update(info, "rowid=" + info.rowid);
+    public int update(BillInfo info) {
+        return update(info, "rowid=" + info.rowid+";");
     }
 
-    private int update(BillInfo info, String s) {
-        return 0;
+    public int update(BillInfo info, String condition) {
+        ContentValues cv = new ContentValues();
+        cv.put("date", info.date);
+        cv.put("month", info.month);
+        cv.put("type", info.type);
+        cv.put("amount", info.amount);
+        cv.put("descb", info.descb);
+        cv.put("create_time", info.create_time);
+        cv.put("update_time", info.update_time);
+        // 执行更新记录动作，该语句返回更新的记录数量
+        return mWriteDB.update(mTableName, cv, condition, null);
     }
 
     //数据库查询操作
-    private Object queryById(int id) {
+    public Object queryById(int id) {
         String sql = "_id=" + id + ";";
         return query(sql);
     }
@@ -135,7 +144,7 @@ public class BillDBHelper extends SQLiteOpenHelper {
             info.month = cursor.getInt(3); // 取出整型数
             info.type = cursor.getInt(4); // 取出整型数
             info.amount = cursor.getDouble(5); // 取出双精度数
-            info.desc = cursor.getString(6); // 取出字符串
+            info.descb = cursor.getString(6); // 取出字符串
             info.create_time = cursor.getString(7); // 取出字符串
             info.update_time = cursor.getString(8); // 取出字符串
             infoList.add(info);
@@ -146,9 +155,8 @@ public class BillDBHelper extends SQLiteOpenHelper {
 
     }
 
-    public ArrayList<BillInfo> queryByMonth(int mMonth) {
-
-        return null;
+    public List<BillInfo> queryByMonth(int month) {
+        return query("month="+ month+" order by date asc");
     }
 
     //删除操作

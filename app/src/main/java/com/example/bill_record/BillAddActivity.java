@@ -24,6 +24,8 @@ import com.example.utils.DateUtil;
 import com.example.utils.ViewUtil;
 
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class BillAddActivity extends AppCompatActivity implements View.OnClickListener,
         RadioGroup.OnCheckedChangeListener, DatePickerDialog.OnDateSetListener {
@@ -32,7 +34,8 @@ public class BillAddActivity extends AppCompatActivity implements View.OnClickLi
     private TextView tv_date;
     private RadioButton rb_income, rb_expand;
     private EditText et_desc, et_amount;
-    private int mBillType = 1, xuhao;//账单类型的标记
+    private int mBillType = 1; //账单类型
+    private int xuhao;//是一个临时变量，用来存储记录的id在从列表中返回时候
     private Calendar calendar = Calendar.getInstance();//获取日历实例
     private BillDBHelper mBillHelper;//数据库操作对象，不使用线程
 
@@ -46,7 +49,7 @@ public class BillAddActivity extends AppCompatActivity implements View.OnClickLi
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        //对实例字段进行赋值
+        //得到组件对象
         tv_date = findViewById(R.id.tv_date);
         rb_income = findViewById(R.id.rb_income);
         rb_expand = findViewById(R.id.rb_expand);
@@ -61,7 +64,6 @@ public class BillAddActivity extends AppCompatActivity implements View.OnClickLi
         tv_option.setText("查看账单列表");
         tv_option.setOnClickListener(this);
         tv_date.setOnClickListener(this);
-        tv_option.setOnClickListener(this);
         RadioGroup rg_type = findViewById(R.id.rg_type);
         rg_type.setOnCheckedChangeListener(this);
         findViewById(R.id.iv_back).setOnClickListener(this);
@@ -73,18 +75,20 @@ public class BillAddActivity extends AppCompatActivity implements View.OnClickLi
         //通过触发事件的组件id分发事件
         if (v.getId() == R.id.iv_back) finish();//关闭当前页面，模拟退出动作
         else if (v.getId() == R.id.tv_option) {
-            var intent = new Intent(this, BillAddActivity.class);
+            Intent intent = new Intent(this, BillPagerActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             //防止重复跳转页面
             startActivity(intent);
-        } else if (v.getId() == R.id.tv_date) {
+        }
+        else if (v.getId() == R.id.tv_date) {
             //选中了日期文本框，唤起一个日期选择器
             var dialog = new DatePickerDialog(this, this,
                     calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                     calendar.get(Calendar.DAY_OF_MONTH));
             dialog.show();
 
-        } else if (v.getId() == R.id.btn_save) {
+        }
+        else if (v.getId() == R.id.btn_save) {
             saveBill();
         } else ;
 
@@ -99,20 +103,26 @@ public class BillAddActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void saveBill() {
-        ViewUtil.hiddenOneInputMethod(this.et_amount);
+        ViewUtil.hideOneInputMethod(this, et_amount);
         BillInfo bill = new BillInfo();
         bill.xuhao = xuhao;
         bill.date = tv_date.getText().toString();
         bill.month = 100 * calendar.get(Calendar.YEAR) + (calendar.get(Calendar.MONTH));
+        //month映射成为一个包含所在年份的唯一值
         bill.type = mBillType;
-        bill.desc = et_desc.getText().toString();
+        bill.descb = et_desc.getText().toString();
         bill.amount = Double.parseDouble(et_amount.getText().toString());
         mBillHelper.save(bill);
-            Toast.makeText(this, "账单添加成功", Toast.LENGTH_LONG);
+        Toast.makeText(this, "账单添加成功", Toast.LENGTH_LONG);
         //页面重置
+        reset();
+    }
+
+    private void reset() {
         calendar = Calendar.getInstance();
         et_amount.setText("");
         et_desc.setText("");
+        tv_date.setText(DateUtil.getDate(calendar));
     }
 
 
@@ -124,6 +134,23 @@ public class BillAddActivity extends AppCompatActivity implements View.OnClickLi
     protected void onResume() {
         super.onResume();
         xuhao = getIntent().getIntExtra("xuhao", -1);
+        mBillHelper = BillDBHelper.getInstance(this);
+        if (xuhao != -1) {
+            List<BillInfo> bill_list = (List<BillInfo>) mBillHelper.queryById(xuhao);
+            if (bill_list.size() > 0) {
+                BillInfo bill = bill_list.get(0);
+                Date date = DateUtil.formatString("bill.date");
+                calendar.set(Calendar.YEAR, date.getYear());
+                calendar.set(Calendar.MONTH, date.getMonth());
+                calendar.set(Calendar.DAY_OF_MONTH, date.getDate());
+                if (bill.type == 0) rb_income.setChecked(true);
+                else rb_expand.setChecked(true);
+                et_desc.setText(bill.descb);
+                et_amount.setText("" + bill.amount);
 
+            }
+
+        }
+        tv_date.setText(DateUtil.getDate(calendar));
     }
 }

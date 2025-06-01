@@ -7,7 +7,9 @@ plugins {
 android {
     namespace = "com.example.bill_record"
     compileSdk = 35
-
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11.toString()
+    }
     defaultConfig {
         applicationId = "com.example.bill_record"
         minSdk = 31
@@ -34,7 +36,6 @@ android {
     buildFeatures {
         compose = true
     }
-    buildToolsVersion = "35.0.0"
 }
 
 dependencies {

@@ -7,7 +7,7 @@ public class BillInfo {
     public String date;
     public int month;
     public int type;
-    public String desc; //描述型文字，描述账单用途
+    public String descb; //描述型文字，描述账单用途
     public double amount;
     public String remark;
 
@@ -21,7 +21,7 @@ public class BillInfo {
         month = 0;
         type = 0;
         amount = 0.0;
-        desc = "";
+        descb = "";
         create_time = "";
         update_time = "";
         remark = "";

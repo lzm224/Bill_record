@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.PagerTabStrip;
 import androidx.viewpager.widget.ViewPager;
 
@@ -22,7 +21,7 @@ import com.example.utils.DateUtil;
 
 import java.util.Calendar;
 
-public class BIllPagerActivity extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener,DatePickerDialog.OnDateSetListener{
+public class BillPagerActivity extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener,DatePickerDialog.OnDateSetListener{
 
     private TextView tv_month = findViewById(R.id.tv_month);
     //日期选择
@@ -46,7 +45,7 @@ public class BIllPagerActivity extends AppCompatActivity implements View.OnClick
         tv_title.setText("账单列表");
         tv_option.setOnClickListener(this);
         findViewById(R.id.iv_back).setOnClickListener(this);
-        tv_month.setText("DateUtil.getMonth(calendar");
+        tv_month.setText(DateUtil.getMonth(calendar));
         tv_month.setOnClickListener(this);
         initViewPager();
     }

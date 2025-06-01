@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".BIllPagerActivity"
+    tools:context=".BillPagerActivity"
     android:id="@+id/main">
 
     <include layout="@layout/title_booking" />
