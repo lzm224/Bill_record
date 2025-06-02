@@ -41,6 +41,7 @@ public class BillFragment extends Fragment{
             mMonth =getArguments().getInt("month");
         mView = inflater.inflate(R.layout.bill_fragment,container,false);
         //创建出碎片视图
+        lv_bill = mView.findViewById(R.id.lv_bill);
         return mView;
     }
     public void onStart(){
@@ -61,7 +62,6 @@ public class BillFragment extends Fragment{
             sum.remark = String.format("净支出%f",income-expend);
             mBillList.add(sum);
         }
-
         BillListAdapter listAdapter = new BillListAdapter(mContext, mBillList);
         lv_bill.setAdapter(listAdapter);//fragment中的列表视图设置一个装填器
         lv_bill.setOnItemClickListener(listAdapter);//列表视图设置事件
