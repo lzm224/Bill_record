@@ -53,7 +53,7 @@ public class BillFragment extends Fragment{
         if(mBillList != null && mBillList.size() >0){
             double income = 0, expend = 0;
             for(BillInfo bill:mBillList){
-                if(bill.type == 1)
+                if(bill.type == 0)
                     income += bill.amount;
                 else
                     expend += bill.amount;

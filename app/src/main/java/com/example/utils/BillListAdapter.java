@@ -17,6 +17,8 @@ import com.example.bill_record.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class BillListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener,
         AdapterView.OnItemLongClickListener {
@@ -64,7 +66,7 @@ public class BillListAdapter extends BaseAdapter implements AdapterView.OnItemCl
         if (bill.date.equals("合计"))
             holder.tv_amount.setText(bill.remark);
         else
-            holder.tv_amount.setText(String.format("%s%f元", bill.type == 0 ? "income:" : "expand:", bill.amount));
+            holder.tv_amount.setText(String.format("%s%f元", bill.type == 0 ? "收入:" : "支出:", bill.amount));
         return convertView;
     }
 
@@ -88,7 +90,7 @@ public class BillListAdapter extends BaseAdapter implements AdapterView.OnItemCl
         Log.d(TAG,"onItemLongClick position = "+position);
         BillInfo bill = mBillList.get(position);
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        String desc = String.format("删除账单？\n%s% s%d %s",bill.date,
+        String desc = String.format("删除账单？\n%s %s%d %s",bill.date,
                 bill.type==0?"收入":"支出",(int)bill.amount,bill.descb);
         builder.setMessage(desc);
         builder.setPositiveButton("Yes", (DialogInterface dialog, int which)->{
@@ -104,12 +106,46 @@ public class BillListAdapter extends BaseAdapter implements AdapterView.OnItemCl
     private void deleteBill(int position){
         BillInfo bill = mBillList.get(position);
         mBillList.remove((position));//从数据序列移除指定位置的元素
+        BillInfo sum = mBillList.get(mBillList.size()-1);
+        mBillList.remove(mBillList.size() - 1);
+
+        //分离出bill.descb 中的数值，更新支出和收入
+        ArrayList<Double> amounts = getSumAmount(sum.descb);
+        double sum_expand = amounts.get(1);
+        double sum_income = amounts.get(0);
+        if(bill.type == 0) {sum_income -= bill.amount;}
+        else sum_expand -= bill.amount;
+        amounts = getSumAmount(sum.remark);
+        sum.descb = String.format("收入%f\n支出%f元", sum_income, sum_expand);
+        sum.remark = String.format("净支出%f", sum_expand-sum_income);
+        mBillList.add(sum);//同时更新合计上面的收入，支出和净支出
         notifyDataSetChanged();//告诉适配器数据放生了变化
+
         BillDBHelper helper = BillDBHelper.getInstance(mContext);
         helper.delete(bill.xuhao);
+//        if(helper.query("").size()==0)
+//        {
+//            mBillList.remove(mBillList.size() - 1);
+//            notifyDataSetChanged();
+//        }
+//
 
     }
+    //获取字符串中的小数
+    private ArrayList<Double> getSumAmount(String input) {
+        String regex = "[-+]?\\d*\\.?\\d+";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(input);
+        ArrayList<Double> amounts = new ArrayList<>();
+        while(matcher.find()) {
+            String match = matcher.group();
+            double amount = Double.parseDouble(match);
 
+            amounts.add(amount);
+
+        }
+        return amounts;
+    }
     public  class ViewHolder {
         public TextView tv_date;
         public TextView tv_desc;

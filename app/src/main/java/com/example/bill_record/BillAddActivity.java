@@ -140,7 +140,7 @@ public class BillAddActivity extends AppCompatActivity implements View.OnClickLi
             if (bill_list.size() > 0) {
                 BillInfo bill = bill_list.get(0);
                 Date date = DateUtil.formatString("bill.date");
-                calendar.set(Calendar.YEAR, date.getYear());
+                calendar.set(Calendar.YEAR, date.getYear() + 1900);
                 calendar.set(Calendar.MONTH, date.getMonth());
                 calendar.set(Calendar.DAY_OF_MONTH, date.getDate());
                 if (bill.type == 0) rb_income.setChecked(true);
