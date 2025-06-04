@@ -107,13 +107,13 @@ public class BillAddActivity extends AppCompatActivity implements View.OnClickLi
         BillInfo bill = new BillInfo();
         bill.xuhao = xuhao;
         bill.date = tv_date.getText().toString();
-        bill.month = 100 * calendar.get(Calendar.YEAR) + (calendar.get(Calendar.MONTH));
+        bill.month = 100 * calendar.get(Calendar.YEAR) + (calendar.get(Calendar.MONTH) + 1);
         //month映射成为一个包含所在年份的唯一值
         bill.type = mBillType;
         bill.descb = et_desc.getText().toString();
         bill.amount = Double.parseDouble(et_amount.getText().toString());
         mBillHelper.save(bill);
-        Toast.makeText(this, "账单添加成功", Toast.LENGTH_LONG);
+        Toast.makeText(this, "账单添加成功", Toast.LENGTH_LONG).show();
         //页面重置
         reset();
     }

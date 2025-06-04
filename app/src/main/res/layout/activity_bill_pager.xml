@@ -43,8 +43,8 @@
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/vp_bill"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
+            android:layout_height="match_parent"
+            android:visibility="visible">
             <androidx.viewpager.widget.PagerTabStrip
                 android:id="@+id/pts_bill"
                 android:layout_width="wrap_content"

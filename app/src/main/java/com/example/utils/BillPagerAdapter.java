@@ -21,9 +21,7 @@ public class BillPagerAdapter extends FragmentPagerAdapter{
     }
 
     @Override
-    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        return view == object;
-    }
+
     public Fragment getItem(int position) {
         return BillFragment.newInstance(mYear * 100 + (position + 1));
 

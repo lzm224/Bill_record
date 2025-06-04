@@ -38,10 +38,11 @@ public class BillFragment extends Fragment{
                              ViewGroup container, Bundle savedInstanceState) {
         mContext = getActivity();//获取活动页面上下文
         if (getArguments() != null)
-            mMonth =getArguments().getInt("month");
+            mMonth =getArguments().getInt("month",1);
         mView = inflater.inflate(R.layout.bill_fragment,container,false);
         //创建出碎片视图
         lv_bill = mView.findViewById(R.id.lv_bill);
+        lv_bill.setVisibility(View.VISIBLE);//设置列表视图可见
         return mView;
     }
     public void onStart(){
@@ -52,8 +53,10 @@ public class BillFragment extends Fragment{
         if(mBillList != null && mBillList.size() >0){
             double income = 0, expend = 0;
             for(BillInfo bill:mBillList){
-                income += BillInfo.income;
-                expend += BillInfo.expend;
+                if(bill.type == 1)
+                    income += bill.amount;
+                else
+                    expend += bill.amount;
             }
 
             BillInfo sum = new BillInfo();
@@ -62,10 +65,11 @@ public class BillFragment extends Fragment{
             sum.remark = String.format("净支出%f",income-expend);
             mBillList.add(sum);
         }
+
         BillListAdapter listAdapter = new BillListAdapter(mContext, mBillList);
         lv_bill.setAdapter(listAdapter);//fragment中的列表视图设置一个装填器
         lv_bill.setOnItemClickListener(listAdapter);//列表视图设置事件
         lv_bill.setOnItemLongClickListener(listAdapter);
-
     }
+
 }

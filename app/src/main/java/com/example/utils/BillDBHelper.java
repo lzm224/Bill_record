@@ -131,10 +131,10 @@ public class BillDBHelper extends SQLiteOpenHelper {
     }
 
     @OptIn(markerClass = UnstableApi.class)
-    public List<BillInfo> query(String condition) {
+    public ArrayList<BillInfo> query(String condition) {
         String sql = mSelectSQL + condition;
         Log.d(TAG, "query sql:" + sql);
-        List<BillInfo> infoList = new ArrayList<BillInfo>();
+        ArrayList<BillInfo> infoList = new ArrayList<BillInfo>();
         Cursor cursor = mReadDB.rawQuery(sql, null);
         while (cursor.moveToNext()) {
             BillInfo info = new BillInfo();
@@ -155,8 +155,8 @@ public class BillDBHelper extends SQLiteOpenHelper {
 
     }
 
-    public List<BillInfo> queryByMonth(int month) {
-        return query("month="+ month+" order by date asc");
+    public ArrayList<BillInfo> queryByMonth(int month) {
+        return query("  month="+ month+" order by date asc");
     }
 
     //删除操作

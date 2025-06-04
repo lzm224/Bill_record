@@ -25,8 +25,9 @@ public class BillListAdapter extends BaseAdapter implements AdapterView.OnItemCl
     private List<BillInfo> mBillList = new ArrayList<BillInfo>();
 
     public BillListAdapter(Context mContext, List<BillInfo> mBillList) {
-        mContext = mContext;
-        mBillList = mBillList;
+        super();
+        this.mContext = mContext;
+        this.mBillList = mBillList;
 
     }
 
@@ -54,7 +55,7 @@ public class BillListAdapter extends BaseAdapter implements AdapterView.OnItemCl
             holder.tv_date = convertView.findViewById(R.id.tv_date);
             holder.tv_desc = convertView.findViewById(R.id.tv_desc);
             holder.tv_amount = convertView.findViewById(R.id.tv_amount);
-
+            convertView.setTag(holder);
         } else holder = (ViewHolder) convertView.getTag();
 
         BillInfo bill = mBillList.get(position);
@@ -64,7 +65,6 @@ public class BillListAdapter extends BaseAdapter implements AdapterView.OnItemCl
             holder.tv_amount.setText(bill.remark);
         else
             holder.tv_amount.setText(String.format("%s%f元", bill.type == 0 ? "income:" : "expand:", bill.amount));
-
         return convertView;
     }
 
@@ -110,7 +110,7 @@ public class BillListAdapter extends BaseAdapter implements AdapterView.OnItemCl
 
     }
 
-    public final class ViewHolder {
+    public  class ViewHolder {
         public TextView tv_date;
         public TextView tv_desc;
         public TextView tv_amount;
