@@ -77,6 +77,7 @@ public class BillPagerActivity extends AppCompatActivity implements
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         tv_month.setText(DateUtil.getMonth(calendar));
+        initViewPager();
         vp_bill.setCurrentItem(month); // 设置翻页视图显示第几页
     }
 
