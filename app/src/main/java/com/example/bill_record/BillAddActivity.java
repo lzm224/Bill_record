@@ -110,6 +110,10 @@ public class BillAddActivity extends AppCompatActivity implements View.OnClickLi
         bill.month = 100 * calendar.get(Calendar.YEAR) + (calendar.get(Calendar.MONTH) + 1);
         //month映射成为一个包含所在年份的唯一值
         bill.type = mBillType;
+        if(et_amount.getText().toString().isEmpty()) {
+            Toast.makeText(this, "金额不能为空,请输入账单金额", Toast.LENGTH_LONG).show();
+            return;
+        }
         bill.descb = et_desc.getText().toString();
         bill.amount = Double.parseDouble(et_amount.getText().toString());
         mBillHelper.save(bill);

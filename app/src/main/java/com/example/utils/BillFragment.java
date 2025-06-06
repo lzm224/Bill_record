@@ -61,8 +61,8 @@ public class BillFragment extends Fragment{
 
             BillInfo sum = new BillInfo();
             sum.date = "合计";
-            sum.descb =String.format("收入%f\n指出%f元",income,expend);
-            sum.remark = String.format("净支出%f",income-expend);
+            sum.descb =String.format("收入%f\n支出%f元",income,expend);
+            sum.remark = String.format("净支出%f",expend-income);
             mBillList.add(sum);
         }
 
